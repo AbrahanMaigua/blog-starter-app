@@ -1,14 +1,25 @@
+// src/app/page.tsx o donde sea que esté tu index
 import Container from "@/app/_components/container";
 import { HeroPost } from "@/app/_components/hero-post";
 import { Intro } from "@/app/_components/intro";
 import { MoreStories } from "@/app/_components/more-stories";
 import { getAllPosts } from "@/lib/api";
 
-export default function Index() {
-  const allPosts = getAllPosts();
+export default async function Index() {
+  const allPosts = await getAllPosts(); // <-- Ahora es async
+
+  if (!allPosts || allPosts.length === 0) {
+    return (
+      <main>
+        <Container>
+          <Intro />
+          <p>No hay posts aún.</p>
+        </Container>
+      </main>
+    )
+  }
 
   const heroPost = allPosts[0];
-
   const morePosts = allPosts.slice(1);
 
   return (

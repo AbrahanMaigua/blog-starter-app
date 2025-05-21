@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.radius-3 {
+  border-radius: 24px;
+}
+.radius-5 {
+  border-radius: 5px;
+}
