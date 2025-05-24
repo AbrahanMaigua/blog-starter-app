@@ -37,15 +37,14 @@ export async function POST(req:NextRequest) {
     const hashedPassword = await hashPassword(body.password);
     if (!hashedPassword) {
         return NextResponse.json({ error: "Error hashing password" }, { status: 500 });
-
-
+    }
+    // Insert user
     const result = await users.insertOne({
         name: body.name,
         username: body.username,
         email: body.email,
-        password: body.password,
+        password: hashedPassword,
         //role: body.role,
-        
         createdAt: new Date(),
     });
     
