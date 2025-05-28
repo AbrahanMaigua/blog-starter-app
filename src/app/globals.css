@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+.left-text{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: baseline;
+}
 
 .radius-3 {
   border-radius: 24px;

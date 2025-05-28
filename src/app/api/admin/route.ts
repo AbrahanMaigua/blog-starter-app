@@ -9,6 +9,9 @@ export async function POST(request: Request) {
 
   await posts.insertOne({
     title: body.title,
+    slug: body.slug || body.title.toLowerCase().replace(/\s+/g, '-'),
+    markdown: body.markdown,
+    html: body.html,
     content: body.content,
     createdAt: new Date(),
   });

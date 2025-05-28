@@ -1,72 +1,33 @@
-import { Metadata } from "next";
+// app/posts/[slug]/page.tsx
+import { getPostBySlug } from "@/lib/api";
 import { notFound } from "next/navigation";
-import { getAllPosts, getPostBySlug } from "@/lib/api";
-import { CMS_NAME } from "@/lib/constants";
-import markdownToHtml from "@/lib/markdownToHtml";
-import Alert from "@/app/_components/alert";
-import Container from "@/app/_components/container";
-import Header from "@/app/_components/header";
-import { PostBody } from "@/app/_components/post-body";
-import { PostHeader } from "@/app/_components/post-header";
 
-export default async function Post(props: Params) {
-  const params = await props.params;
-  const post = getPostBySlug(params.slug);
-
-  if (!post) {
-    return notFound();
-  }
-
-  const content = await markdownToHtml(post.content || "");
-
-  return (
-    <main>
-      <Alert preview={post.preview} />
-      <Container>
-        <Header />
-        <article className="mb-32">
-          <PostHeader
-            title={post.title}
-            coverImage={post.coverImage}
-            date={post.date}
-            author={post.author}
-          />
-          <PostBody content={content} />
-        </article>
-      </Container>
-    </main>
-  );
-}
-
-type Params = {
-  params: Promise<{
-    slug: string;
-  }>;
+type Props = {
+  params: { slug: string };
 };
 
-export async function generateMetadata(props: Params): Promise<Metadata> {
-  const params = await props.params;
-  const post = getPostBySlug(params.slug);
+export default async function PostPage({ params }: Props) {
+  const post = await getPostBySlug(params.slug);
 
   if (!post) {
-    return notFound();
+    notFound();
   }
 
-  const title = `${post.title} | Next.js Blog Example with ${CMS_NAME}`;
-
-  return {
-    title,
-    openGraph: {
-      title,
-      images: [post.ogImage.url],
-    },
-  };
-}
-
-export async function generateStaticParams() {
-  const posts = getAllPosts();
-
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  return (
+    <main className="max-w-3xl mx-auto p-4">
+      <h1 className="text-4xl font-bold mb-2">{post.title}</h1>
+      <p className="text-gray-500 text-sm mb-6">{new Date(post.createdAt).toLocaleDateString()}</p>
+      {post.coverImage && (
+        <img
+          src={post.coverImage}
+          alt={post.title}
+          className="w-full h-64 object-cover rounded mb-6"
+        />
+      )}
+      <div
+        className="prose prose-lg"
+        dangerouslySetInnerHTML={{ __html: post.html?.replace(/<img /g, '<img class="w-full h-auto" ') || "" }}
+      />
+    </main>
+  );
 }

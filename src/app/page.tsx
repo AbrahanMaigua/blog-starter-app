@@ -1,4 +1,4 @@
-// src/app/page.tsx o donde sea que esté tu index
+// src/app/page.tsx
 import Container from "@/app/_components/container";
 import { HeroPost } from "@/app/_components/hero-post";
 import { Intro } from "@/app/_components/intro";
@@ -6,7 +6,7 @@ import { MoreStories } from "@/app/_components/more-stories";
 import { getAllPosts } from "@/lib/api";
 
 export default async function Index() {
-  const allPosts = await getAllPosts(); // <-- Ahora es async
+  const allPosts = await getAllPosts(); // <-- Carga asíncrona desde MongoDB
 
   if (!allPosts || allPosts.length === 0) {
     return (
@@ -16,7 +16,7 @@ export default async function Index() {
           <p>No hay posts aún.</p>
         </Container>
       </main>
-    )
+    );
   }
 
   const heroPost = allPosts[0];
@@ -34,7 +34,7 @@ export default async function Index() {
           slug={heroPost.slug}
           excerpt={heroPost.excerpt}
         />
-        {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+        {/* {morePosts.length > 0 && <MoreStories posts={morePosts} />} */}
       </Container>
     </main>
   );
